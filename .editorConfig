@@ -8,5 +8,5 @@ charset = utf-8
 [{*.css,*.scss,*.less,*.overrides,*.variables}]
 indent_size = 4
 
-[{*.js,*.json}]
+[{*.js,*.json,*.ts,*.tsx,*.jsx}]
 indent_size = 2
