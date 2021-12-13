@@ -1,6 +1,7 @@
 import { useCallback, useState, useRef, useEffect } from "react";
 import { usePosition } from "use-position";
 import { getDistance } from "geolib";
+import cx from "classnames";
 import TimePicker from "rc-time-picker";
 import moment from "moment";
 
@@ -13,6 +14,7 @@ import blankMp3 from "./blank.mp3";
 function App() {
   const [alarm, setAlarm] = useState<moment.Moment | null>(null);
   const [alarmSet, setAlarmSet] = useState(false);
+  const [alarmPlaying, setAlarmPlaying] = useState(false);
   const [stopDistance, setStopDistance] = useState(10);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -42,12 +44,14 @@ function App() {
   useEffect(() => {
     if (alarmSet && distance > stopDistance) {
       setAlarmSet(false);
+      alarmPlaying(false);
       setAlarm(null);
     }
   }, [distance, alarmSet]);
 
   const showAlarm = () => {
     console.log("ALARM! Wake up!");
+    setAlarmPlaying(true);
     audioRef.current?.play();
 
     if (!("Notification" in window)) {
@@ -79,7 +83,12 @@ function App() {
   }, [alarm]);
 
   return (
-    <div className="App">
+    <div
+      className={cx("App", {
+        "alarm-playing": alarmPlaying,
+        "alarm-set": alarmSet,
+      })}
+    >
       <div className="App-header">
         <TimePicker
           defaultValue={moment().add(1, "hour")}

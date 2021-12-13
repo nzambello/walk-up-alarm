@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+.App.alarm-set {
+    background-color: green;
+}
+
+.App.alarm-playing {
+  background-color: red;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -14,7 +22,6 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
