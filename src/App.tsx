@@ -92,7 +92,7 @@ function App() {
           placeholder="distance"
           min={1}
           value={stopDistance}
-          onChange={(e) => setStopDistance(e.target.value)}
+          onChange={(e) => setStopDistance(parseInt(e.target.value, 10))}
         />
         <p>
           <button type="button" onClick={registerAlarm}>
