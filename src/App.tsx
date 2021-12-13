@@ -44,7 +44,7 @@ function App() {
   useEffect(() => {
     if (alarmSet && distance > stopDistance) {
       setAlarmSet(false);
-      alarmPlaying(false);
+      setAlarmPlaying(false);
       setAlarm(null);
     }
   }, [distance, alarmSet]);
