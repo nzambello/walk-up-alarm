@@ -28,5 +28,3 @@ jobs:
       run: yarn
     - name: Run compiler
       run: yarn tsc
-    - name: Deploy to GH Pages
-      run: bash ./deploy.sh
