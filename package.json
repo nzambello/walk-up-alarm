@@ -4,11 +4,12 @@
   "license": "MIT",
   "version": "0.0.0",
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build",
     "dev": "vite",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "prepare": "husky install",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "test": "tsc"
   },
   "dependencies": {
     "classnames": "^2.3.1",
