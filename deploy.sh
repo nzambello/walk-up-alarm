@@ -14,6 +14,7 @@ cd docs
 # echo 'www.example.com' > CNAME
 
 git init
+git branch -m main
 git add -A
 git commit -m 'deploy'
 
