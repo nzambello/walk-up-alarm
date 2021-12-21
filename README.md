@@ -19,7 +19,7 @@ Alarm clock ringing until you walk out of the bed.
 
 ## Screenshots
 
-<p float="left" align="middle">
+<p float="left">
   <img src="./screenshots/start.png" title="Start page" height="450" />
   <img src="./screenshots/clock-alarm-set.png" title="Alarm set, show clock" height="450" />
   <img src="./screenshots/alarm-playing.png" title="Alarm playing" height="450" />
