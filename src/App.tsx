@@ -13,6 +13,8 @@ import "./App.css";
 import alarmMp3 from "./alarm.mp3";
 import blankMp3 from "./blank.mp3";
 
+import logo from "./logo.svg";
+
 function App() {
   const [alarm, setAlarm] = useState<Date | null>(null);
   const [alarmSet, setAlarmSet] = useState(false);
@@ -60,9 +62,8 @@ function App() {
   useEffect(() => {
     if (alarmSet && distance > stopDistance) {
       resetAlarm();
-    } else {
+    } else if (alarmSet) {
       setHasWalked(false);
-      setAlarmPlaying(true);
       audioRef.current?.play();
     }
   }, [distance, alarmSet]);
@@ -145,7 +146,8 @@ function App() {
           </p>
         ) : (
           <>
-            <h1>Alarm clock</h1>
+            <img src={logo} alt="" role="presentation" height={100} />
+            <h1>Walk-up alarm</h1>
             <div className="input-wrapper">
               <label htmlFor="alarm-time">Set time for the alarm</label>
               {/* <TimeField
