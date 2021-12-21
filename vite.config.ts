@@ -12,7 +12,7 @@ const pwaOptions: Partial<VitePWAOptions> = {
   ],
   manifest: {
     name: "Walk-up alarm",
-    short_name: "Walk-up alarm",
+    short_name: "Walk-up",
     theme_color: "#3E3D42",
     icons: [
       {
