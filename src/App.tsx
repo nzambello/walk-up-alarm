@@ -9,6 +9,7 @@ import {
   isPast,
   add,
 } from "date-fns";
+import Helmet from "react-helmet";
 import useStayAwake from "use-stay-awake";
 
 import { TextField, Button, Dialog, Card } from "ui-neumorphism";
@@ -140,10 +141,30 @@ function App() {
     return () => clearInterval(interval);
   });
 
+  const getThemeColor = (appState: string) => {
+    switch (appState) {
+      case "alarm-playing":
+        return "coral";
+      case "alarm-set":
+        return "#000";
+      case "has-walked":
+        return "teal";
+      default:
+        return "#3E3D42";
+    }
+  };
+
   const [showResetModal, setResetModal] = useState(false);
 
   return (
     <div className={`App theme--dark ${appState}`}>
+      <Helmet>
+        <meta name="theme-color" content={getThemeColor(appState)} />
+        <meta
+          name="msapplication-TileColor"
+          content={getThemeColor(appState)}
+        />
+      </Helmet>
       <div className="App-header">
         {alarmSet && alarm ? (
           <p>
