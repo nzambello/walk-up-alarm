@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/walk-up-alarm/sw.js', { scope: '/walk-up-alarm/' })})}
