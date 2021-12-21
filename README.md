@@ -13,15 +13,17 @@ Alarm clock ringing until you walk out of the bed.
 <p>It's a <a href="https://en.wikipedia.org/wiki/Progressive_web_application" target="_blank" rel="noopener noreferrer">PWA</a>. Install it on your device!</p>
 <br />
 <a href="https://nzambello.github.io/walk-up-alarm/" target="_blank" rel="noopener noreferrer">
-  <img src="./public/walk-up-alarm.svg" width="200" alt="Walk-up logo" style="margin: 2rem 0" />
+  <img src="./public/walk-up-alarm.svg" width="200" alt="Walk-up logo" />
 </a>
+<br />
 
 ## Screenshots
 
-<img src="./screenshots/start.png" alt="Start page" width="33%"/>
-<img src="./screenshots/clock-alarm-set.png" alt="Start page" width="33%"/>
-<img src="./screenshots/alarm-playing.png" alt="Start page" width="33%"/>
-<br />
+<p float="left" align="middle">
+  <img src="./screenshots/start.png" title="Start page" height="450" />
+  <img src="./screenshots/clock-alarm-set.png" title="Alarm set, show clock" height="450" />
+  <img src="./screenshots/alarm-playing.png" title="Alarm playing" height="450" />
+</p>
 <br />
 
 ## Development
