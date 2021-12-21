@@ -1,7 +1,14 @@
 import { useCallback, useState, useRef, useEffect } from "react";
 import { usePosition } from "use-position";
 import { getDistance } from "geolib";
-import { format, parse, differenceInMilliseconds, isMatch } from "date-fns";
+import {
+  format,
+  parse,
+  differenceInMilliseconds,
+  isMatch,
+  isPast,
+  add,
+} from "date-fns";
 import useStayAwake from "use-stay-awake";
 
 import { TextField, Button, Dialog, Card } from "ui-neumorphism";
@@ -157,9 +164,11 @@ function App() {
                 placeholder="08:00"
                 value={alarm ? format(alarm, "HH:mm") : undefined}
                 onChange={({ value }: { value: string }) => {
-                  console.log(value);
                   if (isMatch(value, "HH:mm") || isMatch(value, "H:mm")) {
-                    setAlarm(parse(value, "HH:mm", new Date()));
+                    const parsedValue = parse(value, "HH:mm", new Date());
+                    if (isPast(parsedValue))
+                      setAlarm(add(parsedValue, { days: 1 }));
+                    else setAlarm(parsedValue);
                   }
                 }}
               />
