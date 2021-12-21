@@ -64,7 +64,6 @@ function App() {
       resetAlarm();
     } else if (alarmSet) {
       setHasWalked(false);
-      audioRef.current?.play();
     }
   }, [distance, alarmSet]);
 
@@ -150,22 +149,6 @@ function App() {
             <h1>Walk-up alarm</h1>
             <div className="input-wrapper">
               <label htmlFor="alarm-time">Set time for the alarm</label>
-              {/* <TimeField
-                input={
-                  <TextField
-                    dark
-                    rounded
-                    id="alarm-time"
-                    className="time-picker"
-                    placeholder="08:00"
-                    uncontrolled
-                  />
-                }
-                value={alarm ? format(alarm, "HH:mm") : undefined}
-                onChange={(e) => {
-                  setAlarm(parse(e.target.value, "HH:mm", new Date()));
-                }}
-              /> */}
               <TextField
                 dark
                 rounded
