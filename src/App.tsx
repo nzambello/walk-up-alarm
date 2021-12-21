@@ -1,22 +1,38 @@
 import { useCallback, useState, useRef, useEffect } from "react";
 import { usePosition } from "use-position";
 import { getDistance } from "geolib";
-import cx from "classnames";
-import TimePicker from "rc-time-picker";
-import moment from "moment";
+import { format, parse, differenceInMilliseconds, isMatch } from "date-fns";
+import useStayAwake from "use-stay-awake";
 
+import { TextField, Button } from "ui-neumorphism";
+import { overrideThemeVariables } from "ui-neumorphism";
+
+import "ui-neumorphism/dist/index.css";
 import "./App.css";
-import "rc-time-picker/assets/index.css";
 
 import alarmMp3 from "./alarm.mp3";
 import blankMp3 from "./blank.mp3";
 
 function App() {
-  const [alarm, setAlarm] = useState<moment.Moment | null>(null);
+  const [alarm, setAlarm] = useState<Date | null>(null);
   const [alarmSet, setAlarmSet] = useState(false);
   const [alarmPlaying, setAlarmPlaying] = useState(false);
+  const [hasWalked, setHasWalked] = useState(false);
   const [stopDistance, setStopDistance] = useState(10);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    overrideThemeVariables({
+      "--dark-bg": "#3E3D42",
+      "--dark-bg-dark-shadow": "#323135",
+      "--dark-bg-light-shadow": "#4a494f",
+      "--primary": "#2979ff",
+      "--primary-dark": "#2962ff",
+      "--primary-light": "#82b1ff",
+    });
+  }, []);
+
+  const device = useStayAwake();
 
   const { latitude, longitude, timestamp, accuracy } = usePosition(true, {
     enableHighAccuracy: true,
@@ -43,11 +59,19 @@ function App() {
 
   useEffect(() => {
     if (alarmSet && distance > stopDistance) {
-      setAlarmSet(false);
-      setAlarmPlaying(false);
-      setAlarm(null);
+      resetAlarm();
     }
   }, [distance, alarmSet]);
+
+  const resetAlarm = () => {
+    setHasWalked(true);
+    setAlarmSet(false);
+    setAlarmPlaying(false);
+    setAlarm(null);
+    if (device.canSleep) {
+      device.allowSleeping();
+    }
+  };
 
   const showAlarm = () => {
     console.log("ALARM! Wake up!");
@@ -73,8 +97,11 @@ function App() {
       audioRef.current?.play().then(() => {
         setAlarmSet(true);
         if (latitude && longitude) setStartCoords({ latitude, longitude });
-        const delay = alarm.diff(moment());
+        const delay = differenceInMilliseconds(alarm, new Date());
         console.log("set alarm", delay);
+        if (device.canSleep) {
+          device.preventSleeping();
+        }
         setTimeout(() => {
           showAlarm();
         }, delay);
@@ -82,43 +109,91 @@ function App() {
     }
   }, [alarm]);
 
+  const appState =
+    hasWalked && alarmPlaying
+      ? "has-walked"
+      : alarmPlaying
+      ? "alarm-playing"
+      : alarmSet
+      ? "alarm-set"
+      : "";
+
   return (
-    <div
-      className={cx("App", {
-        "alarm-playing": alarmPlaying,
-        "alarm-set": alarmSet,
-      })}
-    >
+    <div className={`App theme--dark ${appState}`}>
       <div className="App-header">
-        <TimePicker
-          defaultValue={moment().add(1, "hour")}
-          value={alarm ?? undefined}
-          onChange={(newTime) => setAlarm(newTime)}
-          showSecond={false}
-        />
-        <input
-          type="number"
-          placeholder="distance"
-          min={1}
-          value={stopDistance}
-          onChange={(e) => setStopDistance(parseInt(e.target.value, 10))}
-        />
-        <p>
-          <button type="button" onClick={registerAlarm}>
-            Set alarm
-          </button>
+        {alarmSet && alarm ? (
+          <p>{format(alarm, "HH:mm")}</p>
+        ) : (
+          <>
+            <h1>Alarm clock</h1>
+            <div className="input-wrapper">
+              <label htmlFor="alarm-time">Set time for the alarm</label>
+              {/* <TimeField
+                input={
+                  <TextField
+                    dark
+                    rounded
+                    id="alarm-time"
+                    className="time-picker"
+                    placeholder="08:00"
+                    uncontrolled
+                  />
+                }
+                value={alarm ? format(alarm, "HH:mm") : undefined}
+                onChange={(e) => {
+                  setAlarm(parse(e.target.value, "HH:mm", new Date()));
+                }}
+              /> */}
+              <TextField
+                dark
+                rounded
+                id="alarm-time"
+                className="time-picker"
+                placeholder="08:00"
+                value={alarm ? format(alarm, "HH:mm") : undefined}
+                onChange={({ value }: { value: string }) => {
+                  console.log(value);
+                  if (isMatch(value, "HH:mm") || isMatch(value, "H:mm")) {
+                    setAlarm(parse(value, "HH:mm", new Date()));
+                  }
+                }}
+              />
+            </div>
+            <div className="input-wrapper">
+              <label htmlFor="stop-distance">Stop alarm after (meters):</label>
+              <TextField
+                dark
+                rounded
+                className="stop-distance"
+                type="number"
+                id="stop-distance"
+                placeholder="distance"
+                value={stopDistance?.toString() ?? "1"}
+                onChange={(e: { target: { value: string } }) =>
+                  setStopDistance(parseInt(e.target.value, 10))
+                }
+              />
+            </div>
+          </>
+        )}
+        <div>
+          {!alarmSet && (
+            <Button dark rounded onClick={registerAlarm} disabled={!alarm}>
+              Set alarm
+            </Button>
+          )}
           {alarmSet && (
-            <button
-              type="button"
+            <Button
+              dark
+              rounded
               onClick={() => {
-                setAlarm(null);
-                setAlarmSet(false);
+                resetAlarm();
               }}
             >
               Reset
-            </button>
+            </Button>
           )}
-        </p>
+        </div>
         <audio src={alarmSet ? alarmMp3 : blankMp3} ref={audioRef} />
         {startCoords && (
           <code>

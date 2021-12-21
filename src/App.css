@@ -1,25 +1,55 @@
 .App {
   text-align: center;
-  background-color: #282c34;
+  background: var(--bg-color);
 }
 
-.App.alarm-set {
-    background-color: green;
+.theme--dark {
+    --code-bg: #272822;
+    --bg-color: var(--dark-bg);
+    --text-shadow: var(--dark-bg-dark-shadow);
+    --menu-text-color: var(--g-text-color-dark);
+    --menu-text-hover-color: var(--primary-light);
+    --text-secondary: var(--g-text-color-disabled-dark);
+    --box-shadow-inset-small: inset -1px -1px 1px var(--dark-bg-light-shadow), inset 1px 1px 1px var(--dark-bg-dark-shadow);
+}
+
+.App.has-walked {
+    background-color: teal;
 }
 
 .App.alarm-playing {
-  background-color: red;
+  background-color: coral;
+}
+.App.alarm-playing p {
+  color: white;
+}
+
+.App.alarm-set {
+    background: #000;
+}
+
+.App.alarm-set button {
+    opacity: 0.1;
+}
+.App.alarm-set button:hover,
+.App.alarm-set button:focus {
+    opacity: 0.6;
+}
+
+.App.alarm-set p {
+    font-size: 30vw;
+    font-weight: bold;
+    color: coral;
+    opacity: 0.2;
+    margin: 0;
+}
+.App.alarm-set p:hover {
+    opacity: 0.4;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {
@@ -32,19 +62,44 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+code {
+    display: none;
 }
 
 button {
   font-size: calc(10px + 2vmin);
+}
+
+.input-wrapper {
+    margin-top: 2rem;
+}
+
+.time-picker,
+.stop-distance {
+    align-items: center;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-size: 3rem;
+}
+
+.time-picker div,
+.stop-distance div {
+    width: 100%;
+}
+
+.time-picker input,
+.stop-distance input {
+    font-size: 2rem;
+    width: 10rem;
+    margin: 1rem 0;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stop-distance input:focus,
+.time-picker input:focus {
+    outline: 1px solid currentColor;
 }
