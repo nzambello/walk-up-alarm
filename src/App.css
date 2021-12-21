@@ -37,14 +37,41 @@
 }
 
 .App.alarm-set p {
-    font-size: 30vw;
-    font-weight: bold;
     color: coral;
-    opacity: 0.2;
     margin: 0;
 }
-.App.alarm-set p:hover {
+
+.clock {
+    font-size: 27vw;
+    font-weight: bold;
+    display: block;
+    opacity: 0.2;
+    font-weight: 700;
+    font-family: 'Fira Code', monospace;
+    letter-spacing: -4px;
+}
+.clock:hover {
     opacity: 0.4;
+}
+.App.alarm-playing .clock {
+    opacity: 1;
+    animation: blink 0.6s linear infinite;
+}
+
+@keyframes blink {
+    0% {
+       opacity: 1;
+    }
+    100% {
+        opacity: 0.4;
+    }
+}
+
+small {
+    display: inline-block;
+    font-family: 'Fira Code';
+    margin-bottom: 2rem;
+    opacity: 0.3;
 }
 
 .App-logo {
@@ -102,4 +129,16 @@ h1 {
 .stop-distance input:focus,
 .time-picker input:focus {
     outline: 1px solid currentColor;
+}
+
+.pa-4 {
+    padding: 1.5rem
+}
+
+.ma-4 {
+    margin: 1.5rem;
+}
+
+.ml-2 {
+    margin-left: 0.5rem;
 }

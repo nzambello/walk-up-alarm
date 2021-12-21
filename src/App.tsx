@@ -4,7 +4,7 @@ import { getDistance } from "geolib";
 import { format, parse, differenceInMilliseconds, isMatch } from "date-fns";
 import useStayAwake from "use-stay-awake";
 
-import { TextField, Button } from "ui-neumorphism";
+import { TextField, Button, Dialog, Card } from "ui-neumorphism";
 import { overrideThemeVariables } from "ui-neumorphism";
 
 import "ui-neumorphism/dist/index.css";
@@ -60,6 +60,10 @@ function App() {
   useEffect(() => {
     if (alarmSet && distance > stopDistance) {
       resetAlarm();
+    } else {
+      setHasWalked(false);
+      setAlarmPlaying(true);
+      audioRef.current?.play();
     }
   }, [distance, alarmSet]);
 
@@ -68,6 +72,7 @@ function App() {
     setAlarmSet(false);
     setAlarmPlaying(false);
     setAlarm(null);
+    audioRef.current?.pause();
     if (device.canSleep) {
       device.allowSleeping();
     }
@@ -118,11 +123,26 @@ function App() {
       ? "alarm-set"
       : "";
 
+  const [clock, setClock] = useState<string>(format(new Date(), "HH:mm"));
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!clock.includes(":") || alarmPlaying)
+        setClock(format(new Date(), "HH:mm"));
+      else setClock(format(new Date(), "HH mm"));
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
+  const [showResetModal, setResetModal] = useState(false);
+
   return (
     <div className={`App theme--dark ${appState}`}>
       <div className="App-header">
         {alarmSet && alarm ? (
-          <p>{format(alarm, "HH:mm")}</p>
+          <p>
+            <span className="clock">{clock}</span>
+            <small>Alarm: {format(alarm, "HH:mm")}</small>
+          </p>
         ) : (
           <>
             <h1>Alarm clock</h1>
@@ -183,15 +203,43 @@ function App() {
             </Button>
           )}
           {alarmSet && (
-            <Button
-              dark
-              rounded
-              onClick={() => {
-                resetAlarm();
-              }}
-            >
+            <Button dark text onClick={() => setResetModal(true)}>
               Reset
             </Button>
+          )}
+          <Dialog
+            dark
+            minWidth={300}
+            visible={showResetModal}
+            onClose={() => setResetModal(false)}
+          >
+            <Card className="pa-4 ma-4">
+              Are you sure? <br /> <br />
+              <Button
+                dark
+                color="var(--primary)"
+                rounded
+                onClick={() => setResetModal(false)}
+              >
+                close
+              </Button>
+              <Button
+                dark
+                rounded
+                onClick={() => {
+                  resetAlarm();
+                  setResetModal(false);
+                }}
+                className="ml-2"
+              >
+                reset
+              </Button>
+            </Card>
+          </Dialog>
+          {alarmPlaying && distance && (
+            <p className="distance">
+              Distance: {distance.toFixed(2)} / {stopDistance} meters
+            </p>
           )}
         </div>
         <audio src={alarmSet ? alarmMp3 : blankMp3} ref={audioRef} />
